@@ -75,5 +75,5 @@ def upload():
         return jsonify({'error': f'Lỗi xử lý ảnh: {str(e)}'}), 500
 
 if __name__ == '__main__':
-    from waitress import serve
-    serve(app, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    port = int(os.environ.get("PORT", 5000))  # Đọc cổng từ biến môi trường
+    app.run(host="0.0.0.0", port=port)
