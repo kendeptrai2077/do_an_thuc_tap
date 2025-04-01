@@ -74,4 +74,5 @@ def upload():
 
 
 if __name__ == '__main__':
-    app.run()  # Tắt debug trong production
+    port = int(os.environ.get("PORT", 10000))  # Đổi mặc định thành 10000
+    app.run(host="0.0.0.0", port=port, debug=False)  # Tắt debug trong production
