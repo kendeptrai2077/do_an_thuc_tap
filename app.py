@@ -4,7 +4,7 @@ from torchvision import transforms
 from PIL import Image
 import io
 import os
-
+from waitress import serve
 app = Flask(__name__)
 
 # Character set (nhúng trực tiếp thay vì đọc từ file)
@@ -73,6 +73,6 @@ def upload():
         return jsonify({'error': f'Lỗi xử lý ảnh: {str(e)}'}), 500
 
 
-# if __name__ == '__main__':
-#     port = int(os.environ.get("PORT", 10000))  # Đổi mặc định thành 10000
-#     app.run(host="0.0.0.0", port=port, debug=False)  # Tắt debug trong production
+if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 10000))  # Đổi mặc định thành 10000
+    app.run(host="0.0.0.0", port=port, debug=False)  # Tắt debug trong production
