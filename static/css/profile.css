@@ -1,0 +1,191 @@
+/* CSS chung cho header, menu, footer */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+/* Header */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    color: white;
+    padding: 15px 20px;
+}
+
+.header-container h1 {
+    font-size: 24px;
+    margin: 0;
+}
+
+.menu-icon {
+    font-size: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.menu-icon:hover {
+    transform: rotate(90deg);
+}
+
+#menu {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background-color: #333;
+    width: 100%;
+    max-width: 250px;
+    z-index: 1000;
+    transition: transform 0.3s ease;
+}
+
+#menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#menu ul li {
+    padding: 12px;
+    border-bottom: 1px solid #444;
+}
+
+#menu ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    display: block;
+}
+
+#menu ul li a:hover {
+    background-color: #555;
+    padding-left: 10px;
+}
+
+.hidden {
+    transform: translateX(-100%);
+}
+
+.container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #333;
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    font-size: 14px;
+}
+
+/* Profile Section */
+.profile-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.profile-container h2 {
+    font-size: 28px;
+    color: #333;
+}
+
+.profile-details p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #555;
+}
+
+.profile-details p strong {
+    color: #4CAF50;
+}
+
+button {
+    padding: 12px 25px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 15px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+/* History Section */
+.history-list {
+    margin-top: 30px;
+}
+
+.history-item {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.history-item p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.history-item p strong {
+    color: #333;
+}
+
+/* Responsive */
+@media screen and (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px;
+    }
+
+    .menu-icon {
+        font-size: 28px;
+    }
+
+    #menu {
+        width: 100%;
+        position: static;
+    }
+
+    .profile-container {
+        padding: 15px;
+        max-width: 100%;
+    }
+
+    footer {
+        font-size: 12px;
+    }
+}
+
+/* Responsive for small screens */
+@media screen and (max-width: 480px) {
+    .header-container h1 {
+        font-size: 20px;
+    }
+
+    button {
+        width: 100%;
+        font-size: 18px;
+    }
+}

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhận dạng chữ viết</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="header-container">
+            <div class="menu-icon" onclick="toggleMenu()" aria-label="Mở menu điều hướng">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <h1>Nhận Diện Chữ Viết</h1>
+            <div class="login-btn">
+            </div>
+            <nav id="menu" class="hidden">
+                <ul>
+                    <li><a href="/home">Trang chủ</a></li>
+                    <li><a href="/profile">Profile</a></li>
+                    <li><a href="/about">Giới thiệu</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h2>Chuyển đổi chữ viết thành văn bản dễ dàng</h2>
+            <p>Nhận diện chữ viết tay hoặc chữ in từ ảnh hoặc camera với độ chính xác cao.</p>
+        </section>
+
+        <section class="upload-section">
+            <div class="button-container">
+                <button onclick="document.getElementById('fileInput').click()" class="btn btn-primary">
+                    <span class="icon">📂</span> Tải ảnh
+                </button>
+                <input type="file" id="fileInput" accept="image/*" style="display:none;" onchange="previewImage(event)">
+                <button onclick="startPainting()" class="btn btn-secondary">
+                    <span class="icon">📸</span> Vẽ chữ
+                </button>
+                <button onclick="clearCanvas()" class="btn btn-danger">
+                    <span class="icon">🗑️</span> Xóa
+                </button>                
+                <canvas id="drawingCanvas" width="400" height="200" style="border: 1px solid #000; display: none;"></canvas>
+
+                <button onclick="exportToFile()" class="btn btn-danger">
+                    <span class="icon">🗑️</span> Xuất file
+                </button>
+                <button onclick="submitImage()" class="btn btn-success">
+                    <span class="icon">✅</span> Duyệt ảnh
+                </button>
+            </div>
+
+            <div class="upload-container">
+                <video id="camera" autoplay style="display: none;"></video>
+                <canvas id="canvas" style="display: none;"></canvas>
+                <img id="preview" style="display: none; max-width: 100%; height: auto;" alt="Ảnh đã tải lên">
+                <canvas id="drawingCanvas" width="400" height="200" style="border: 1px solid #000; display: none;"></canvas>
+            </div>
+
+            <div class="result-container" id="result" style="display: none;">
+                <h3>Kết quả nhận diện</h3>
+                <div id="result-content" class="result-text"></div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <p>Blog: Cập nhật thông tin về AI & Nhận diện chữ viết</p>
+        
+        <!-- Thêm thông tin liên hệ -->
+        <div class="footer-contact">
+            <p><strong>Liên hệ:</strong> <a href="mailto:info@example.com">83@gmaill.com</a></p>
+            <p><strong>Điện thoại:</strong> 0938712384</p>
+        </div>
+    
+        <!-- Thêm các liên kết mạng xã hội -->
+        <div class="footer-socials">
+            <a href="https://www.facebook.com" target="_blank">Facebook</a>
+            <a href="https://www.twitter.com" target="_blank">Twitter</a>
+            <a href="https://www.linkedin.com" target="_blank">LinkedIn</a>
+        </div>
+    
+        <!-- Thêm bản quyền -->
+        <div class="footer-copyright">
+            <p>&copy; 2025 Nhận diện chữ viết. Tất cả quyền được bảo lưu.</p>
+        </div>
+    </footer>
+    
+
+    <script>
+        let isPainting = false;
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function startPainting() {
+            // Hiển thị canvas khi nhấn nút "Vẽ chữ"
+            canvas.style.display = 'block';
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            isPainting = true;
+            ctx.beginPath();
+            ctx.moveTo(e.offsetX, e.offsetY);
+        });
+
+        canvas.addEventListener('mousemove', (e) => {
+            if (!isPainting) return;
+            ctx.lineTo(e.offsetX, e.offsetY);
+            ctx.stroke();
+        });
+
+        canvas.addEventListener('mouseup', () => isPainting = false);
+        canvas.addEventListener('mouseleave', () => isPainting = false);
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function previewImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('preview');
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    document.getElementById('result').style.display = 'none';
+                    document.getElementById('camera').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function submitImage() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            const canvas = document.getElementById('drawingCanvas');
+            
+            const formData = new FormData();
+        
+            if (file) {
+                // Nếu có ảnh tải lên, gửi ảnh đó
+                formData.append("image", file);
+            } else {
+                // Nếu không có ảnh tải lên, lấy dữ liệu từ canvas vẽ
+                const context = canvas.getContext('2d');
+                const isCanvasEmpty = !context.getImageData(0, 0, canvas.width, canvas.height).data.some(channel => channel !== 0);
+        
+                if (isCanvasEmpty) {
+                    alert("Vui lòng tải ảnh hoặc vẽ chữ!");
+                    return;
+                }
+        
+                canvas.toBlob(blob => {
+                    formData.append("image", blob, "drawing.png");
+        
+                    fetchAndDisplayResult(formData);
+                });
+                return; // Tránh gửi request 2 lần
+            }
+        
+            fetchAndDisplayResult(formData);
+        }
+        
+        // Hàm gửi request đến server và hiển thị kết quả
+        function fetchAndDisplayResult(formData) {
+            fetch("/upload", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    document.getElementById('result-content').innerText = data.result;
+                    document.getElementById('result').style.display = 'block';
+                } else {
+                    alert("Lỗi: " + (data.error || "Không thể nhận diện chữ viết!"));
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi:", error);
+                alert("Có lỗi xảy ra. Vui lòng thử lại!");
+            });
+        }
+        
+
+        function toggleMenu() {
+            const menu = document.getElementById('menu');
+            menu.classList.toggle('hidden');
+        }
+        function exportToFile() {
+            const resultContent = document.getElementById('result-content').innerText;
+            
+            if (!resultContent.trim()) {
+                alert("Không có nội dung để xuất!");
+                return;
+            }
+        
+            const blob = new Blob([resultContent], { type: "text/plain" });
+            const link = document.createElement("a");
+        
+            link.href = URL.createObjectURL(blob);
+            link.download = "ket_qua_nhan_dien.txt"; // Tên file xuất ra
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+    </script>
+</body>
+</html>
